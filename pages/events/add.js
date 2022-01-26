@@ -1,9 +1,9 @@
-
+import Layout from "../../components/Layout";
 const Add = () => {
     return (
-        <div>
+        <Layout title='Add new Event'>
             <h1>Add Page</h1>
-        </div>
+        </Layout>
     );
 }
 
