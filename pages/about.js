@@ -1,5 +1,5 @@
 //jshint esversion:6
-import Layout from "../components/Layout";
+import Layout from "@/components/Layout";
 
 const About = () => {
     return (
