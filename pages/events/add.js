@@ -6,6 +6,7 @@ import { API_URL } from "@/config/index";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/Form.module.css";
 import Layout from "@/components/Layout";
+import slugify from "slugify";
 
 export default function AddEventPage() {
   const [data, setValues] = useState({
@@ -31,13 +32,7 @@ export default function AddEventPage() {
     if (hasEmptyFields) {
       toast.error("Please fill in all fields");
     }
-    // const value_json_strapi = {
-    //     "data": {
-    //         values
-    //     }
-    // }
-    console.log(JSON.stringify(data))
-
+    data.slug = slugify(data.Name.toLowerCase())
     const res = await fetch(`${API_URL}/api/events`, {
       method: "POST",
       headers: {
@@ -45,12 +40,16 @@ export default function AddEventPage() {
       },
       body: JSON.stringify({"data":data}),
     });
+    
+
     if (!res.ok) {
       toast.error("Something Went Wrong");
     } else {
       const evt = await res.json();
-    //   router.push(`/events/${evt.slug}`);
+      router.push(`/events/${evt.data.attributes.slug}`);
     }
+    // const evt = await res.json();
+    // console.log(evt.data.attributes.slug);
   };
 
   const handleInputChange = (e) => {

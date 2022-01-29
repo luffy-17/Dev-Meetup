@@ -8,9 +8,9 @@ export default function Eventitem({ evt }) {
       <div className={styles.img}>
         <Image
           src={
-            evt.attributes.image
+            evt.attributes.image.data
               ? evt.attributes.image.data.attributes.formats.thumbnail.url
-              : "/images/event_default.png"
+              : "/images/sample/dev2.jpg"
           }
           width={170}
           height={100}

@@ -27,7 +27,7 @@ export default function EventsPage({ evt }) {
             {new Date(evt[0].attributes.date).toLocaleDateString('en-US')} at {evt[0].attributes.time}
         </span>
         <h1>{evt[0].attributes.Name}</h1>
-        {evt[0].attributes.image.data.attributes.formats.large.url && (
+        {evt[0].attributes.image.data && (
             <div className={styles.image}>
                 <Image src={evt[0].attributes.image.data.attributes.formats.large.url} width={960} height={600}/>
             </div>
