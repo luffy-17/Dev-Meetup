@@ -24,21 +24,21 @@ export default function EventsPage({ evt }) {
           </a>
         </div>
         <span>
-            {evt.date} at {evt.time}
+            {new Date(evt[0].attributes.date).toLocaleDateString('en-US')} at {evt[0].attributes.time}
         </span>
-        <h1>{evt.name}</h1>
-        {evt.image && (
+        <h1>{evt[0].attributes.Name}</h1>
+        {evt[0].attributes.image.data.attributes.formats.large.url && (
             <div className={styles.image}>
-                <Image src={evt.image} width={960} height={600}/>
+                <Image src={evt[0].attributes.image.data.attributes.formats.large.url} width={960} height={600}/>
             </div>
         )}
 
-        <h3>Performers:</h3>
-        <p>{evt.performers}</p>
+        <h3>Mentor:</h3>
+        <p>{evt[0].attributes.mentor}</p>
         <h3>Description:</h3>
-        <p>{evt.description}</p>
-        <h3>Venue: {evt.venue}</h3>
-        <p>{evt.address}</p>
+        <p>{evt[0].attributes.description}</p>
+        <h3>Venue: {evt[0].attributes.venue}</h3>
+        <p>{evt[0].attributes.address}</p>
 
         <Link href='/events'>
             <a className={styles.back}>{'<'} Go Back</a>
@@ -50,11 +50,13 @@ export default function EventsPage({ evt }) {
 }
 
 export async function getStaticPaths() {
-  const res = await fetch(`${API_URL}/api/events`);
-  const events = await res.json();
+  const res = await fetch(`${API_URL}/api/events?&populate=*`);
+  const events_with_data = await res.json();
+  // console.log(events.data);
+  const events = events_with_data.data;
 
   const paths = events.map((evt) => ({
-    params: { slug: evt.slug },
+    params: { slug: evt.attributes.slug },
   }));
 
   return {
@@ -64,11 +66,13 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { slug } }) {
-  const res = await fetch(`${API_URL}/api/events/${slug}`);
-  const events = await res.json();
+  const res = await fetch(`${API_URL}/api/events?filters[slug]=${slug}&_sort=date:ASC&_limit=3&populate=*`);
+  const events_with_data = await res.json();
+  // console.log(events.data);
+  const events = events_with_data.data;
   return {
     props: {
-      evt: events[0],
+      evt: events,
     },
     revalidate: 1,
   };
