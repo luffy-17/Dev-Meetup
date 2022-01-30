@@ -4,16 +4,34 @@ import styles from "@/styles/Event.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/router";
 
 export default function EventsPage({ evt }) {
-    const deleteEvent = (e)=>{
-        console.log(e)
+  const router = useRouter();
+
+  // Delete EVENT ----------------------------------------------------------
+    const deleteEvent = async (e)=>{
+       if(confirm('Are you Sure?')){
+         const res = await fetch(`${API_URL}/api/events/${evt[0].id}`, {
+           method: 'DELETE'
+         })
+
+         const data = await res.json()
+         if (!res.ok){
+           toast.error(data.message)
+         } else{
+           router.push('/events')
+         }
+       }
     }
   return (
     <Layout>
       <div className={styles.event}>
         <div className={styles.controls}>
-          <Link href={`/events/edit/${evt.id}`}>
+          
+          <Link href={`/events/edit/${evt[0].id}`}>
             <a>
               <FaPencilAlt> Edit Event</FaPencilAlt>
             </a>
@@ -27,6 +45,7 @@ export default function EventsPage({ evt }) {
             {new Date(evt[0].attributes.date).toLocaleDateString('en-US')} at {evt[0].attributes.time}
         </span>
         <h1>{evt[0].attributes.Name}</h1>
+        <ToastContainer />
         {evt[0].attributes.image.data && (
             <div className={styles.image}>
                 <Image src={evt[0].attributes.image.data.attributes.formats.large.url} width={960} height={600}/>
