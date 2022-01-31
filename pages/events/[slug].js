@@ -51,7 +51,7 @@ export default function EventsPage({ evt }) {
         <ToastContainer />
         {evt[0].attributes.image.data && (
             <div className={styles.image}>
-                <Image src={evt[0].attributes.image.data.attributes.formats.large.url} width={960} height={600}/>
+                <Image src={evt[0].attributes.image.data.attributes.formats.medium.url} width={960} height={600}/>
             </div>
         )}
 

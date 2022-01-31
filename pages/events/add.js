@@ -33,6 +33,7 @@ export default function AddEventPage() {
       toast.error("Please fill in all fields");
     }
     data.slug = slugify(data.Name.toLowerCase())
+    console.log(data)
     const res = await fetch(`${API_URL}/api/events`, {
       method: "POST",
       headers: {
