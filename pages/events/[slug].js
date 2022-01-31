@@ -73,23 +73,23 @@ export default function EventsPage({ evt }) {
   );
 }
 
-export async function getStaticPaths() {
-  const res = await fetch(`${API_URL}/api/events?&populate=*`);
-  const events_with_data = await res.json();
-  // console.log(events.data);
-  const events = events_with_data.data;
+// export async function getStaticPaths() {
+//   const res = await fetch(`${API_URL}/api/events?&populate=*`);
+//   const events_with_data = await res.json();
+//   // console.log(events.data);
+//   const events = events_with_data.data;
 
-  const paths = events.map((evt) => ({
-    params: { slug: evt.attributes.slug },
-  }));
+//   const paths = events.map((evt) => ({
+//     params: { slug: evt.attributes.slug },
+//   }));
 
-  return {
-    paths,
-    fallback: true,
-  };
-}
+//   return {
+//     paths,
+//     fallback: true,
+//   };
+// }
 
-export async function getStaticProps({ params: { slug } }) {
+export async function getServerSideProps({ query: { slug } }) {
   const res = await fetch(`${API_URL}/api/events?filters[slug]=${slug}&_sort=date:ASC&_limit=3&populate=*`);
   const events_with_data = await res.json();
   // console.log(events.data);
@@ -98,6 +98,5 @@ export async function getStaticProps({ params: { slug } }) {
     props: {
       evt: events,
     },
-    revalidate: 1,
   };
 }
