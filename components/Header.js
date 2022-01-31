@@ -31,11 +31,11 @@ export default function Header() {
                   <a>Add Event</a>
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/account/dashboard">
                   <a>DashBoard</a>
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <button onClick = {()=>logout()} className="btn-secondary btn-icon">
                   <FaSignOutAlt /> LogOut

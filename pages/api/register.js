@@ -3,14 +3,16 @@ import cookie from "cookie";
 
 export default async (req, res) => {
   if (req.method === "POST") {
-    const { identifier, password } = req.body;
-    const strapiRes = await fetch(`${API_URL}/api/auth/local`, {
+    const { username, email, password } = req.body;
+
+    const strapiRes = await fetch(`${API_URL}/api/auth/local/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        identifier,
+        username,
+        email,
         password,
       }),
     });
@@ -35,9 +37,9 @@ export default async (req, res) => {
 
       res.status(200).json({ user: data.user });
     } else {
-      if (identifier === ''){
+      if (email === ''){
         res.status(data.error.status).json({ message: data.error.details.errors[0].message});
-      }else if(identifier !== ''){
+      }else if(email !== ''){
         res.status(data.error.status).json({ message: data.error.message});
       }
       
