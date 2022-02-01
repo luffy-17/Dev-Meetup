@@ -2,6 +2,8 @@ import Layout from "@/components/Layout";
 import Eventitem from "@/components/EventItem";
 import { API_URL } from "@/config/index";
 import Link from "next/link";
+const qs = require("qs");
+
 
 export default function HomePage({ events }) {
   return (
@@ -12,7 +14,7 @@ export default function HomePage({ events }) {
         <Eventitem key={evt.id} evt={evt} />
       ))}
       {events.length > 0 && (
-        <Link href='/events'>
+        <Link href="/events">
           <a className="btn-secondary">View All Events</a>
         </Link>
       )}
@@ -21,12 +23,22 @@ export default function HomePage({ events }) {
 }
 
 export async function getStaticProps() {
-  const res = await fetch(`${API_URL}/api/events?_sort=date:ASC&_limit=3&populate=*`);
+  const query = qs.stringify(
+    {
+      sort: ["date:desc"],
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const res = await fetch(
+    `${API_URL}/api/events?${query}&pagination[limit]=3&populate=*`
+  );
   const events_with_data = await res.json();
   // console.log(events.data);
   const events = events_with_data.data;
   return {
-    props: {events},
+    props: { events },
     revalidate: 1,
   };
 }

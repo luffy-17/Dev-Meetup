@@ -3,6 +3,7 @@ import Eventitem from "@/components/EventItem";
 import { API_URL, PER_PAGE } from "@/config/index";
 import Link from "next/link";
 import Pagination from "@/components/Pagination";
+const qs = require('qs');
 
 export default function EventsPage({ events, page, total }) {
   return (
@@ -22,16 +23,21 @@ export default function EventsPage({ events, page, total }) {
 export async function getServerSideProps({query: {page = 1}}) {
   // Calculate start Page
   const start = +page === 1 ? 0 : (+page - 1) * PER_PAGE
+  const query = qs.stringify({
+    sort: ['date:desc'],
+  }, {
+    encodeValuesOnly: true,
+  });
 
   // Fetch total
-  const totalRes = await fetch(`${API_URL}/api/events?_sort=date:ASC&pagination[limit]=${PER_PAGE}&pagination[start]=${start}&populate=*`);
+  const totalRes = await fetch(`${API_URL}/api/events?${query}&pagination[limit]=${PER_PAGE}&pagination[start]=${start}&populate=*`);
   const total_res = await totalRes.json();
   // console.log(events.data);
   const total_meta = total_res.meta;
   const total = total_meta.pagination.total;
 
   // Fetch events -------------------------------------------
-  const eventRes = await fetch(`${API_URL}/api/events?_sort=date:ASC&pagination[limit]=${PER_PAGE}&pagination[start]=${start}&populate=*`);
+  const eventRes = await fetch(`${API_URL}/api/events?${query}&pagination[limit]=${PER_PAGE}&pagination[start]=${start}&populate=*`);
   const events_with_data = await eventRes.json();
   // console.log(events.data);
   const events = events_with_data.data;
